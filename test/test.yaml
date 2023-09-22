@@ -1,0 +1,47 @@
+
+kind: Service 
+apiVersion: v1 
+metadata:
+  name: llvm4msvc
+  namespace: sandbox
+spec:
+  type: LoadBalancer
+  selector:
+    app: llvm4msvc-app 
+  ports:
+    - name: "8000"
+      port: 8000
+      targetPort: 8000
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: llvm4msvc
+  namespace: sandbox
+  labels:
+    app: llvm4msvc-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: llvm4msvc-app
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: llvm4msvc-app
+    spec:
+      containers:
+        - name: llvm4msvc
+          image: highcanfly/llvm4msvc:latest
+          imagePullPolicy: Always
+          command: ["/bin/sh"]
+          args: ["-c", "sleep infinity"]
+
+          resources:
+            limits:
+              cpu: 2
+              memory: 1Gi
+      restartPolicy: Always
+status: {}
