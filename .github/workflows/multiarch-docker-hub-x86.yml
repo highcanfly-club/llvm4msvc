@@ -19,7 +19,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v3.4.0
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v5
+        uses: docker/setup-qemu-action@v3
         with:
           platforms: 'arm64'
       - name: Set up Docker Buildx
@@ -37,7 +37,7 @@ jobs:
           images: ${{ secrets.DOCKER_IMAGE_NAME }}-x86
       
       - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v5
         with:
           context: .
           platforms: linux/arm64, linux/amd64
