@@ -14,15 +14,24 @@ With /usr/share/msvc/test/test.sh you can test a full compilation and executable
 test.sh contains:  
 ```sh
 #!/bin/bash
-export MSVC_BASE=/usr/share/msvc
-clang -target x86_64-pc-windows-msvc -I$MSVC_BASE/sdk/include/um -I$MSVC_BASE/sdk/include/shared -I$MSVC_BASE/sdk/include/ucrt -I$MSVC_BASE/crt/include -I./include -c src/test.c -o test.o
-clang -target x86_64-pc-windows-msvc -I$MSVC_BASE/sdk/include/um -I$MSVC_BASE/sdk/include/shared -I$MSVC_BASE/sdk/include/ucrt -I$MSVC_BASE/crt/include -I./include -c src/MainWindow.c -o MainWindow.o
-clang -target x86_64-pc-windows-msvc -I$MSVC_BASE/sdk/include/um -I$MSVC_BASE/sdk/include/shared -I$MSVC_BASE/sdk/include/ucrt -I$MSVC_BASE/crt/include -I./include -c src/AboutDialog.c -o AboutDialog.o
+$CC_x86_64_pc_windows_msvc $CL_FLAGS /I include /c src/test.c /Fotest.o
+$CC_x86_64_pc_windows_msvc $CL_FLAGS /I include /c src/MainWindow.c /FoMainWindow.o
+$CC_x86_64_pc_windows_msvc $CL_FLAGS /I include /c src/AboutDialog.c /FoAboutDialog.o
 
-lld-link /libpath:$MSVC_BASE/sdk/lib/um/x86_64 /libpath:$MSVC_BASE/sdk/lib/ucrt/x86_64 /libpath:$MSVC_BASE/crt/lib/x86_64 \
+$LINK_x86_64_pc_windows_msvc /libpath:$MSVC_BASE/sdk/lib/um/x86_64 /libpath:$MSVC_BASE/sdk/lib/ucrt/x86_64 /libpath:$MSVC_BASE/crt/lib/x86_64 \
     /subsystem:WINDOWS \
-    user32.lib kernel32.lib gdi32.lib comctl32.lib \
-    vcruntime.lib uuid.lib ucrt.lib \
+    user32.lib kernel32.lib comctl32.lib \
     test.o MainWindow.o AboutDialog.o \
     /out:test.exe
 ```
+
+# Shortcuts
+
+|   |   |
+|---|---|
+|CC_x86_64_pc_windows_msvc|clang-cl|
+|CXX_x86_64_pc_windows_msvc|clang-cl|
+|LINK_x86_64_pc_windows_msvc|lld-link|
+|LINK_FLAGS|/libpath:$MSVC_BASE/sdk/lib/um/x86_64 /libpath:$MSVC_BASE/sdk/lib/ucrt/x86_64 /libpath:$MSVC_BASE/crt/lib/x86_64|
+|CL|`${CC_x86_64_pc_windows_msvc} --target=x86_64-pc-windows-msvc ${CL_FLAGS}`|
+|LINK|`${LINK_x86_64_pc_windows_msvc} --target=x86_64-pc-windows-msvc ${LINK_FLAGS}`|

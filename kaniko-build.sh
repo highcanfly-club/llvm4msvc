@@ -35,11 +35,13 @@ tar -cv --exclude "node_modules" --exclude "dkim.rsa" --exclude "private" --excl
       {
         "name": "kaniko",
         "image": "highcanfly/kaniko:latest",
-        "imagePullPolicy": "IfNotPresent",
+        "imagePullPolicy": "Always",
         "stdin": true,
         "stdinOnce": true,
         "args": [
           "-v","info",
+          "--build-arg","MSVC_ARCH=x86",
+          "--build-arg","LLVM_ARCH=i686",
           "--cache=false",
           "--dockerfile=Dockerfile'$EXT'",
           "--context=tar://stdin",
