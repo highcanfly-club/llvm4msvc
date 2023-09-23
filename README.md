@@ -14,17 +14,28 @@ With /usr/share/msvc/test/test.sh you can test a full compilation and executable
 test.sh contains:  
 ```sh
 #!/bin/bash
-$CC_x86_64_pc_windows_msvc $CL_FLAGS /I include /c src/test.c /Fotest.o
-$CC_x86_64_pc_windows_msvc $CL_FLAGS /I include /c src/MainWindow.c /FoMainWindow.o
-$CC_x86_64_pc_windows_msvc $CL_FLAGS /I include /c src/AboutDialog.c /FoAboutDialog.o
+$CL /I include /c src/test.c
+$CL /I include /c src/MainWindow.c
+$CL /I include /c src/AboutDialog.c
 
-$LINK_x86_64_pc_windows_msvc /libpath:$MSVC_BASE/sdk/lib/um/x86_64 /libpath:$MSVC_BASE/sdk/lib/ucrt/x86_64 /libpath:$MSVC_BASE/crt/lib/x86_64 \
-    /subsystem:WINDOWS \
+$LINK /subsystem:WINDOWS \
     user32.lib kernel32.lib comctl32.lib \
-    test.o MainWindow.o AboutDialog.o \
+    test.obj MainWindow.obj AboutDialog.obj \
     /out:test.exe
 ```
 
+# Disclaimer
+I build this for my own use, it corresponds to my need, if you need to adapt it to your needs feel free to fork and adapt…
+
+# Docker
+## x86_64 (for arm64 and amd64 linux hosts)
+```
+docker push highcanfly/llvm4msvc:latest
+```
+## (work in progress) x86 (for arm64 and amd64 linux hosts)
+```
+docker push highcanfly/llvm4msvc-x86:latest
+```
 # Shortcuts
 
 |   |   |
