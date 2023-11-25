@@ -10,15 +10,18 @@ LABEL maintainer="Ronan <ronan@parapente.eu.org>"
 RUN apt update -y \
     && apt install -y cmake openssl build-essential lld llvm clang curl vim
 RUN echo "Run for ${TARGETARCH} / ${MSVC_ARCH} / ${LLVM_ARCH} " ; \
-    if [[ "$TARGETARCH" == "amd64" ]] ; then \
-        _ARCH=amd64; \
+    if [ "$TARGETARCH" = "amd64" ] ; then \
+        export _ARCH=x86_64; \
     else \
-        _ARCH=aarch64 ; \
+        export _ARCH=aarch64 ; \
     fi \
-    && curl -fLSs https://github.com/Jake-Shadle/xwin/releases/download/0.3.1/xwin-0.3.1-${_ARCH}-unknown-linux-musl.tar.gz | tar -xvz \
-    && mv xwin-0.3.1-${_ARCH}-unknown-linux-musl/xwin /usr/local/bin/  \
+    && echo "TARGETARCH=$_ARCH" \
+    && export URL="https://github.com/Jake-Shadle/xwin/releases/download/0.5.0/xwin-0.5.0-${_ARCH}-unknown-linux-musl.tar.gz" \
+    && echo "URL=$URL" \
+    && curl -fLSs "$URL" | tar -xvz \
+    && mv xwin-0.5.0-${_ARCH}-unknown-linux-musl/xwin /usr/local/bin/  \
     && xwin --arch $MSVC_ARCH --accept-license splat --output /usr/share/msvc \
-    && rm -rf xwin-0.3.1-${_ARCH}-unknown-linux-musl \
+    && rm -rf xwin-0.5.0-${_ARCH}-unknown-linux-musl \
     && rm -rf .xwin-cache
 # bug in debian base image ???
 #&& ln -sf lld-link-14 /usr/bin/lld-link 
@@ -46,4 +49,5 @@ ENV CFLAGS_x86_64_pc_windows_msvc="${CL_FLAGS}" \
     LINK="${LINK_x86_64_pc_windows_msvc} /lldignoreenv  ${LINK_FLAGS}" 
 COPY test /usr/share/msvc/test 
 RUN chmod ugo+x /usr/share/msvc/test/test.sh
-CMD "/usr/bin/sleep infinity"
+RUN cd /usr/lib/llvm-14/bin/ && ln -svf clang clang-cl
+CMD ["/usr/bin/sleep", "infinity"]
