@@ -1,6 +1,7 @@
 FROM ubuntu:noble
 # possible values arm64 amd64
-ARG TARGETARCH=arm64
+ARG TARGETARCH=amd64
+ARG XWIN_VERSION="0.6.6-rc.2"
 ARG DEBIAN_FRONTEND=noninteractive
 # possible values x86 x86_64
 ARG MSVC_ARCH=x86_64
@@ -16,20 +17,20 @@ RUN echo "Run for ${TARGETARCH} / ${MSVC_ARCH} / ${LLVM_ARCH} " ; \
         export _ARCH=aarch64 ; \
     fi \
     && echo "TARGETARCH=$_ARCH" \
-    && export URL="https://github.com/Jake-Shadle/xwin/releases/download/0.5.0/xwin-0.5.0-${_ARCH}-unknown-linux-musl.tar.gz" \
+    && export URL="https://github.com/Jake-Shadle/xwin/releases/download/${XWIN_VERSION}/xwin-${XWIN_VERSION}-${_ARCH}-unknown-linux-musl.tar.gz" \
     && echo "URL=$URL" \
     && curl -fLSs "$URL" | tar -xvz \
-    && mv xwin-0.5.0-${_ARCH}-unknown-linux-musl/xwin /usr/local/bin/  \
+    && mv xwin-${XWIN_VERSION}-${_ARCH}-unknown-linux-musl/xwin /usr/local/bin/  \
     && xwin --arch $MSVC_ARCH --accept-license splat --output /usr/share/msvc \
-    && rm -rf xwin-0.5.0-${_ARCH}-unknown-linux-musl \
+    && rm -rf xwin-${XWIN_VERSION}-${_ARCH}-unknown-linux-musl \
     && rm -rf .xwin-cache
 # bug in debian base image ???
-#&& ln -sf lld-link-14 /usr/bin/lld-link 
+#&& ln -sf lld-link-18 /usr/bin/lld-link 
 RUN cmake --version 1> /dev/null 2> /dev/null \
     && apt update -y \
     && apt reinstall libssl3 openssl \
     && cmake --version
-RUN ln -sf clang-14 /usr/bin/clang-cl && ln -sf llvm-ar-14 /usr/bin/llvm-lib \ 
+RUN ln -sf clang-18 /usr/bin/clang-cl && ln -sf llvm-ar-18 /usr/bin/llvm-lib \ 
     && update-alternatives --install /usr/bin/cc cc /usr/bin/clang 100 \
     && update-alternatives --install /usr/bin/c++ c++ /usr/bin/clang++ 100 \
     && apt-get remove -y --auto-remove \
@@ -49,5 +50,5 @@ ENV CFLAGS_x86_64_pc_windows_msvc="${CL_FLAGS}" \
     LINK="${LINK_x86_64_pc_windows_msvc} /lldignoreenv  ${LINK_FLAGS}" 
 COPY test /usr/share/msvc/test 
 RUN chmod ugo+x /usr/share/msvc/test/test.sh
-RUN cd /usr/lib/llvm-14/bin/ && ln -svf clang clang-cl
+RUN cd /usr/lib/llvm-18/bin/ && ln -svf clang clang-cl
 CMD ["/usr/bin/sleep", "infinity"]
