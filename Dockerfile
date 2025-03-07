@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM ubuntu:noble
 # possible values arm64 amd64
 ARG TARGETARCH=arm64
 ARG DEBIAN_FRONTEND=noninteractive
