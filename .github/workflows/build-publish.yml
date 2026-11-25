@@ -14,7 +14,9 @@ concurrency:
 jobs:
   x86_64:
     permissions:
-      contents: read
+      contents: write
+      id-token: write
+      attestations: write
     uses: sctg-development/build-multi-arch-docker-action/.github/workflows/build.yml@v2
     with:
       dockerfile: Dockerfile
@@ -27,7 +29,9 @@ jobs:
 
   x86:
     permissions:
-      contents: read
+      contents: write
+      id-token: write
+      attestations: write
     uses: sctg-development/build-multi-arch-docker-action/.github/workflows/build.yml@v2
     with:
       dockerfile: Dockerfile
