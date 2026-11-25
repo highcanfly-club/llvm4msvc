@@ -14,11 +14,11 @@ With /usr/share/msvc/test/test.sh you can test a full compilation and executable
 test.sh contains:  
 ```sh
 #!/bin/bash
-$CL /I include /c src/test.c
-$CL /I include /c src/MainWindow.c
-$CL /I include /c src/AboutDialog.c
+$MSVC_CL /I include /c src/test.c
+$MSVC_CL /I include /c src/MainWindow.c
+$MSVC_CL /I include /c src/AboutDialog.c
 
-$LINK /subsystem:WINDOWS \
+$MSVC_LINK /subsystem:WINDOWS \
     user32.lib kernel32.lib comctl32.lib \
     test.obj MainWindow.obj AboutDialog.obj \
     /out:test.exe
@@ -44,5 +44,9 @@ docker push highcanfly/llvm4msvc-x86:latest
 |CXX_x86_64_pc_windows_msvc|clang-cl|
 |LINK_x86_64_pc_windows_msvc|lld-link|
 |LINK_FLAGS|/libpath:$MSVC_BASE/sdk/lib/um/x86_64 /libpath:$MSVC_BASE/sdk/lib/ucrt/x86_64 /libpath:$MSVC_BASE/crt/lib/x86_64|
-|CL|`${CC_x86_64_pc_windows_msvc} --target=x86_64-pc-windows-msvc ${CL_FLAGS}`|
-|LINK|`${LINK_x86_64_pc_windows_msvc} --target=x86_64-pc-windows-msvc ${LINK_FLAGS}`|
+|MSVC_CL|`${CC_x86_64_pc_windows_msvc} --target=x86_64-pc-windows-msvc ${CL_FLAGS}`|
+|MSVC_LINK|`${LINK_x86_64_pc_windows_msvc} --target=x86_64-pc-windows-msvc ${LINK_FLAGS}`|
+
+# Why MSVC_CL / MSVC_LINK (and not CL / LINK)
+`CL` and `LINK` are environment variables read by `clang-cl` and by recent `lld-link` themselves (like MSVC's `cl.exe`/`link.exe`): their content is prepended to the command line.
+Exporting `LINK="lld-link ..."` made every `lld-link` invocation (cargo, cmake, ...) fail with `lld-link: error: could not open 'lld-link'`. The shortcuts are therefore named `MSVC_CL` and `MSVC_LINK`.

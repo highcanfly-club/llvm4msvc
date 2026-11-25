@@ -46,8 +46,8 @@ ENV CL_FLAGS="-Wno-unused-command-line-argument -fuse-ld=lld-link /I ${MSVC_BASE
     LINK_FLAGS="/libpath:${MSVC_BASE}/sdk/lib/um/${MSVC_ARCH} /libpath:${MSVC_BASE}/sdk/lib/ucrt/${MSVC_ARCH} /libpath:${MSVC_BASE}/crt/lib/${MSVC_ARCH}"
 ENV CFLAGS_x86_64_pc_windows_msvc="${CL_FLAGS}" \
     CXXFLAGS_x86_64_pc_windows_msvc="${CL_FLAGS}" \
-    CL="${CC_x86_64_pc_windows_msvc} --target=${LLVM_ARCH}-pc-windows-msvc ${CL_FLAGS}" \
-    LINK="${LINK_x86_64_pc_windows_msvc} /lldignoreenv  ${LINK_FLAGS}" 
+    MSVC_CL="${CC_x86_64_pc_windows_msvc} --target=${LLVM_ARCH}-pc-windows-msvc ${CL_FLAGS}" \
+    MSVC_LINK="${LINK_x86_64_pc_windows_msvc} /lldignoreenv  ${LINK_FLAGS}" 
 COPY test /usr/share/msvc/test 
 RUN chmod ugo+x /usr/share/msvc/test/test.sh
 RUN cd /usr/lib/llvm-18/bin/ && ln -svf clang clang-cl
