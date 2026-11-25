@@ -1,6 +1,6 @@
 FROM ubuntu:noble
-# possible values arm64 amd64
-ARG TARGETARCH=amd64
+# automatic buildx platform arg (values arm64 amd64): must not have a default or it overrides the real platform
+ARG TARGETARCH
 ARG XWIN_VERSION="0.10.0"
 ARG DEBIAN_FRONTEND=noninteractive
 # possible values x86 x86_64
