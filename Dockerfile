@@ -1,7 +1,7 @@
 FROM ubuntu:noble
 # possible values arm64 amd64
 ARG TARGETARCH=amd64
-ARG XWIN_VERSION="0.6.6-rc.2"
+ARG XWIN_VERSION="0.10.0"
 ARG DEBIAN_FRONTEND=noninteractive
 # possible values x86 x86_64
 ARG MSVC_ARCH=x86_64
