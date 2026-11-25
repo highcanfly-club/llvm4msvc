@@ -1,0 +1,39 @@
+# Builds the x86_64 and x86 MSVC toolchain images in parallel.
+# Each one is built natively on amd64 and arm64 runners (no QEMU) and merged into a multi-arch manifest.
+name: Build and publish amd64/arm64 to Docker Hub
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+concurrency:
+  group: build-publish-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  x86_64:
+    permissions:
+      contents: read
+    uses: sctg-development/build-multi-arch-docker-action/.github/workflows/build.yml@v2
+    with:
+      dockerfile: Dockerfile
+      image: highcanfly/llvm4msvc
+      artifact-prefix: x86_64
+      build-args: |
+        MSVC_ARCH=x86_64
+        LLVM_ARCH=x86_64
+    secrets: inherit
+
+  x86:
+    permissions:
+      contents: read
+    uses: sctg-development/build-multi-arch-docker-action/.github/workflows/build.yml@v2
+    with:
+      dockerfile: Dockerfile
+      image: highcanfly/llvm4msvc-x86
+      artifact-prefix: x86
+      build-args: |
+        MSVC_ARCH=x86
+        LLVM_ARCH=i686
+    secrets: inherit
