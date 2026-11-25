@@ -25,7 +25,9 @@ jobs:
       build-args: |
         MSVC_ARCH=x86_64
         LLVM_ARCH=x86_64
-    secrets: inherit
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
   x86:
     permissions:
@@ -40,4 +42,6 @@ jobs:
       build-args: |
         MSVC_ARCH=x86
         LLVM_ARCH=i686
-    secrets: inherit
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
